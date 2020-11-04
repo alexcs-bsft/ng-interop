@@ -8,13 +8,18 @@ export default class UserItem extends React.Component {
   };
 
   render() {
-    const className = this.props.selected ? 'user selected' : 'user';
-    return this.props.user ? (
+    const {
+      selected,
+      user,
+      children,
+    } = this.props;
+    const className = selected ? 'user selected' : 'user';
+    return user ? (
       <div className={className}>
-        <span>Id: {this.props.user.id}</span> -{' '}
-        <span>{this.props.user.name}</span>{' '}
-        <button onClick={this.handleClick} disabled={this.props.selected}>
-          select
+        <span>Id: {user.id}</span> -{' '}
+        <span>{user.name}</span>{' '}
+        <button onClick={this.handleClick} disabled={selected}>
+          {children || 'select'}
         </button>
       </div>
     ) : null;

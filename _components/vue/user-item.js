@@ -3,7 +3,8 @@ export default {
   template: `
     <div v-if="user" class="user" :class="{ selected: selected }">
     <span>Id: {{ user.id }}</span> - <span>{{ user.name }}</span>
-    <button @click="$emit('selectMe', user)" :disabled="selected">select
+    <button @click="$emit('selectMe', user)" :disabled="selected">
+      <slot>select</slot>
     </button>
     </div>
   `,
