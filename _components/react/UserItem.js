@@ -12,7 +12,7 @@ export default class UserItem extends React.Component {
     return this.props.user ? (
       <div className={className}>
         <span>Id: {this.props.user.id}</span> -{' '}
-        <span>{this.props.user.name}</span>
+        <span>{this.props.user.name}</span>{' '}
         <button onClick={this.handleClick} disabled={this.props.selected}>
           select
         </button>

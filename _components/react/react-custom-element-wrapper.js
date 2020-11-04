@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import PropTypes from 'prop-types';
 
 
 class ReactCustomElement extends HTMLElement {
@@ -126,6 +127,35 @@ function decapitalize(str) {
 export default function wrap(ReactComponent) {
   return class CustomElement extends ReactCustomElement {
 
+    getEventPropTypes(keys) {
+      return Object.fromEntries(keys.map((propName) => {
+        // normalize event name
+        const eventName = decapitalize(propName.replace(/^on/, ''));
+
+        return [propName, this.getEventCallback(eventName)];
+      }))
+    }
+
+    getPropertyPropTypes(keys) {
+      this._props = this._props ?? {};
+      const props = Object.fromEntries(keys.map((key) => {
+        this._props[key] = this._props[key] ?? this[key];
+        if (!CustomElement.prototype.hasOwnProperty(key)) {
+          Object.defineProperty(CustomElement.prototype, key, {
+            get() {
+              return this._props[key];
+            },
+            set(value) {
+              this._props[key] = value;
+              this.update();
+            }
+          });
+        }
+        return [key, this._props[key]];
+      }));
+      return props;
+    }
+
     getPropTypes() {
       if (!ReactComponent.hasOwnProperty('propTypes')) return [];
 
@@ -133,42 +163,24 @@ export default function wrap(ReactComponent) {
         ReactComponent.propTypes,
         (propType) => (propType === PropTypes.func)
       );
+      const functions = this.getEventPropTypes(functionPropNames);
+      const properties = this.getPropertyPropTypes(propertyPropNames);
 
-
-      // Create accessors
-      const el = this;
-      const propertyAccessors = propertyPropNames.map((propName) => {
-        const accessor = {
-          get() {
-            return el[propName];
-          },
-          set (value) {
-            el[propName] = value;
-          }
-        }
-
-        return [propName, accessor];
-      });
-
-      const functionAccessors = functionPropNames.map((propName) => {
-        // normalize event name
-        const eventName = decapitalize(propName.replace(/^on/, ''));
-
-        return [propName, {
-          get() {
-            return el.getEventCallback(eventName);
-          },
-        }];
-      });
-
-      return Object.defineProperties({}, Object.fromEntries([
-        ...propertyAccessors,
-        ...functionAccessors,
-      ]));
+      return {
+        ...functions,
+        ...properties,
+      };
     }
 
     render(props) {
-      render(React.createElement(ReactComponent, props), this);
+      console.log('rendering');
+      const fullProps = {
+        ...this.getPropTypes(),
+        ...props,
+      };
+      this._wrapper = React.createElement(ReactComponent, fullProps);
+      debugger;
+      render(this._wrapper, this);
     }
   };
 }
