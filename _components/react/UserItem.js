@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 export default class UserItem extends React.Component {
   handleClick = () => {
-    this.props.onSelect(this.props.user);
+    this.props.onSelectMe(this.props.user);
   };
 
   render() {
@@ -23,5 +23,6 @@ export default class UserItem extends React.Component {
   static propTypes = {
     user: PropTypes.object,
     selected: PropTypes.bool,
+    onSelectMe: PropTypes.func,
   };
 }
