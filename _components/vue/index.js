@@ -1,6 +1,7 @@
 import _kebabCase from 'lodash/kebabCase';
 import Vue from 'vue'; // TODO: figure out how this should work for vue 3
-import wrap from '@vue/web-component-wrapper/dist/vue-wc-wrapper';
+
+import wrap from './vue-custom-element-wrapper';
 
 import UserItem from './user-item';
 
