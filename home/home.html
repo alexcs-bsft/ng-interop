@@ -1,0 +1,37 @@
+<h1>Hello {{$ctrl.name}}!</h1>
+<p>
+  Start editing <b>home/home.html</b> :)
+  
+  <a ui-sref="about({token: 'abc'})" target="_blank">about</a>
+  <button class="button" ng-click="$ctrl.getUsers()"> Find Users!</button>
+</p>
+<span ng-if="show">Here I Am</span>
+<div class="list-container">
+  <ul class="ng1">
+    <li ng-repeat="user in $ctrl.users">
+      <user-item
+        user="user"
+        selected="user.id === $ctrl.selectedId"
+        ng-on-select="$ctrl.onSelect($event)"
+      ></user-item>
+    </li>
+  </ul>
+  <ul class="vue">
+    <li ng-repeat="user in $ctrl.users">
+      <v-user-item
+        ng-prop-user="user"
+        ng-prop-selected="user.id === $ctrl.selectedId"
+        ng-on-select="$ctrl.onSelect($event)"
+      ></v-user-item>
+    </li>
+  </ul>
+  <ul class="react">
+    <li ng-repeat="user in $ctrl.users">
+      <r-user-item
+        ng-attr-user="{{user}}"
+        ng-attr-selected="{{user.id === $ctrl.selectedId}}"
+        ng-on-select="$ctrl.onSelect($event)"
+      ></r-user-item>
+    </li>
+  </ul>
+</p>

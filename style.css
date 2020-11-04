@@ -1,0 +1,17 @@
+h1,
+p {
+  font-family: Lato;
+}
+
+.list-container {
+  display: grid;
+  width: 100vw;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.user {
+}
+
+.user.selected {
+  color: green;
+}
