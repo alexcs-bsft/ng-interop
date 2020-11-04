@@ -70,7 +70,7 @@ class ReactCustomElement extends HTMLElement {
   getEventCallback(eventName) {
     return payload => this.dispatchEvent(
       new CustomEvent(eventName, {
-        detail: { ...payload },
+        detail: [{ ...payload }],
       })
     );
   }
@@ -173,13 +173,11 @@ export default function wrap(ReactComponent) {
     }
 
     render(props) {
-      console.log('rendering');
       const fullProps = {
         ...this.getPropTypes(),
         ...props,
       };
       this._wrapper = React.createElement(ReactComponent, fullProps);
-      debugger;
       render(this._wrapper, this);
     }
   };

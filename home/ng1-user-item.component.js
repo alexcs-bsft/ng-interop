@@ -11,7 +11,7 @@ export default {
   },
   controller($element) {
     this.emit = (eventName, payload) => {
-      const event = new CustomEvent(eventName, { detail: [payload] });
+      const event = new CustomEvent(eventName, { detail: payload });
       $element[0].dispatchEvent(event);
     };
   },

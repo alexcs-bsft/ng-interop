@@ -11,7 +11,10 @@ class HomeCtrl {
 
   onSelect($event) {
     console.log("onSelect", $event);
-    this.selectedId = $event?.detail?.[0]?.id ?? null;
+    const payload = Array.isArray($event?.detail)
+      ? $event?.detail?.[0]
+      : $event?.detail;
+    this.selectedId = payload?.id ?? null;
   }
 
   async getUsers() {
