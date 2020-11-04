@@ -1,5 +1,5 @@
 export default {
-  template:`
+  template: `
   <div ng-if="$ctrl.user" class="user" ng-class="{ selected: $ctrl.selected }">
     <span>Id: {{ $ctrl.user.id}}</span> - <span>{{$ctrl.user.name}}</span>
     <button ng-click="$ctrl.emit('select', $ctrl.user)" ng-disabled="$ctrl.selected">select</button>
@@ -15,4 +15,4 @@ export default {
       $element[0].dispatchEvent(event);
     };
   },
-}
+};

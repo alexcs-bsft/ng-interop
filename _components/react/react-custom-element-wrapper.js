@@ -1,5 +1,6 @@
-import * as React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
+import * as React from 'react';
+import { render, unmountComponentAtNode } from 'react-dom';
+
 
 class ReactElement extends HTMLElement {
   constructor() {
@@ -31,7 +32,7 @@ class ReactElement extends HTMLElement {
     const props = {
       ...this.getProps(this.attributes),
       ...this.getEvents(),
-      children: this.parseHtmlToReact(this.innerHTML)
+      children: this.parseHtmlToReact(this.innerHTML),
     };
     this.render(props);
   }
@@ -46,9 +47,10 @@ class ReactElement extends HTMLElement {
 
   getProps(attributes) {
     return [...attributes]
-      .filter(attr => attr.name !== "style")
+      .filter(attr => attr.name !== 'style')
       .map(attr => this.convert(attr.name, attr.value))
-      .reduce((props, prop) => ({ ...props, [prop.name]: prop.value }), {});
+      .reduce((props, prop) => ({ ...props, [prop.name]: prop.value }
+      ), {});
   }
 
   getEvents() {
@@ -56,23 +58,25 @@ class ReactElement extends HTMLElement {
       .filter(key => /on([a-z].*)/.exec(key.name))
       .reduce(
         (events, ev) => ({
-          ...events,
-          [ev.name]: args =>
-            this.dispatchEvent(new CustomEvent(ev.name, { ...args }))
-        }),
-        {}
+            ...events,
+            [ev.name]: args =>
+              this.dispatchEvent(new CustomEvent(ev.name, { ...args })),
+          }
+        ),
+        {},
       );
   }
 
   convert(attrName, attrValue) {
     let value = attrValue;
-    if (attrValue === "true" || attrValue === "false")
-      value = attrValue === "true";
-    else if (!isNaN(attrValue) && attrValue !== "") value = +attrValue;
-    else if (/^{.*}/.exec(attrValue)) value = JSON.parse(attrValue);
+    if (attrValue === 'true' || attrValue === 'false') {
+      value = attrValue === 'true';
+    } else if (!isNaN(attrValue) && attrValue !== '') {
+      value = +attrValue;
+    } else if (/^{.*}/.exec(attrValue)) value = JSON.parse(attrValue);
     return {
       name: attrName,
-      value: value
+      value: value,
     };
   }
 }

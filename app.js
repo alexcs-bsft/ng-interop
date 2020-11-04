@@ -4,8 +4,8 @@ import "@uirouter/angularjs";
 // Import your app stylesheets
 import "./style.css";
 
-import "./components/react";
-import "./components/vue";
+import "./_components/react";
+import "./_components/vue";
 
 // Import your app functionality
 import "./home";
