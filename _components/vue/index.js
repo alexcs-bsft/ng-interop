@@ -10,10 +10,13 @@ import UserItem from './user-item';
   UserItem,
 ].forEach(function defineCustomElement(vueComponent) {
   const CustomElement = wrap(Vue, vueComponent);
-  const name = _kebabCase(vueComponent.name);
+  const name = `v-${_kebabCase(vueComponent.name)}`;
 
-  console.log('Registering', `v-${name}`, vueComponent);
-  // if (!window.customElements.get(name)) {
-    window.customElements.define(`v-${name}`, CustomElement);
-  // }
+  console.debug('Registering', name, vueComponent);
+  if (window.customElements.get(name)) {
+    // TODO: I'm too lazy to figure out HMR right now
+    window.location.reload();
+  } else {
+    window.customElements.define(name, CustomElement);
+  }
 });

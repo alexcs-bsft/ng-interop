@@ -9,10 +9,13 @@ import UserItem from './UserItem';
   UserItem,
 ].forEach(function defineCustomElement(reactComponent) {
   const CustomElement = wrap(reactComponent);
-  const name = _kebabCase(reactComponent.name);
+  const name = `r-${_kebabCase(reactComponent.name)}`;
 
-  console.log('Registering', `r-${name}`, reactComponent);
-  // if (!window.customElements.get(name)) {
-    window.customElements.define(`r-${name}`, CustomElement);
-  // }
+  console.debug('Registering', name, reactComponent);
+  if (window.customElements.get(name)) {
+    // TODO: I'm too lazy to figure out HMR right now
+    window.location.reload();
+  } else {
+    window.customElements.define(name, CustomElement);
+  }
 });

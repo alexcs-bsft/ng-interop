@@ -1,17 +1,55 @@
 import * as React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+
+
+/**
+ * Split an object into two based on whether a given predicate returns truthy.
+ * @template Value
+ * @param {Object<string, Value>} obj
+ * @param {function(value:Value, key?:string, index?: number): boolean} predicate
+ *
+ * @return {string[][]} an array of two arrays of strings,
+ *          where the first is the subset of the original for which the predicate evaluated to truthy,
+ *          and the second is the remainder.
+ */
+function partitionKeys(obj, predicate) {
+  const truthy = [];
+  const falsy = [];
+
+  Object.entries(obj).forEach(([key, value], index) => {
+    const result = predicate(value, key, index);
+    const bucket = Boolean(result) ? truthy : falsy;
+
+    bucket.push(key);
+  });
+
+  return [truthy, falsy];
+}
+
+/***
+ * lowercase the first character
+ * @param {string} str
+ * @return {string}
+ */
+function decapitalize(str) {
+  if (str && str.length) {
+    return str.charAt(0).toLowerCase() + str.slice(1);
+  }
+}
 
 class ReactCustomElement extends HTMLElement {
   constructor() {
     super();
-    this.observer = new MutationObserver(() => this.update());
-    this.observer.observe(this, { attributes: true });
+    this.observer = new MutationObserver(this.update);
+    this.observer.observe(this, {
+      attributes: true,
+      subtree: true,
+    });
   }
 
   connectedCallback() {
-    this._innerHTML = this.innerHTML;
     this.mount();
   }
 
@@ -20,30 +58,21 @@ class ReactCustomElement extends HTMLElement {
     this.observer.disconnect();
   }
 
-  update() {
+  update = () => {
     this.unmount();
     this.mount();
   }
-
-  // Must be implemented in children
-  // render(props) {
-  // }
 
   mount() {
     const props = {
       ...this.getProps(this.attributes),
       ...this.getEvents(),
-      children: this.parseHtmlToReact(this.innerHTML),
     };
     this.render(props);
   }
 
   unmount() {
-    unmountComponentAtNode(this);
-  }
-
-  parseHtmlToReact(html) {
-    return html;
+    ReactDOM.unmountComponentAtNode(this);
   }
 
   getProps(attributes) {
@@ -89,41 +118,6 @@ class ReactCustomElement extends HTMLElement {
   }
 }
 
-/**
- * Split an object into two based on whether a given predicate returns truthy.
- * @template Value
- * @param {Object<string, Value>} obj
- * @param {function(value:Value, key?:string, index?: number): boolean} predicate
- *
- * @return {string[][]} an array of two arrays of strings,
- *          where the first is the subset of the original for which the predicate evaluated to truthy,
- *          and the second is the remainder.
- */
-function partitionKeys(obj, predicate) {
-  const truthy = [];
-  const falsy = [];
-
-  Object.entries(obj).forEach(([key, value], index) => {
-    const result = predicate(value, key, index);
-    const bucket = Boolean(result) ? truthy : falsy;
-
-    bucket.push(key);
-  });
-
-  return [truthy, falsy];
-}
-
-/***
- * lowercase the first character
- * @param {string} str
- * @return {string}
- */
-function decapitalize(str) {
-  if (str && str.length) {
-    return str.charAt(0).toLowerCase() + str.slice(1);
-  }
-}
-
 export default function wrap(ReactComponent) {
   return class CustomElement extends ReactCustomElement {
 
@@ -140,17 +134,18 @@ export default function wrap(ReactComponent) {
       this._props = this._props ?? {};
       const props = Object.fromEntries(keys.map((key) => {
         this._props[key] = this._props[key] ?? this[key];
-        if (!CustomElement.prototype.hasOwnProperty(key)) {
-          Object.defineProperty(CustomElement.prototype, key, {
-            get() {
-              return this._props[key];
-            },
-            set(value) {
-              this._props[key] = value;
-              this.update();
-            }
-          });
-        }
+        // TODO: this may need to have a way of reacting to inner changes
+        Object.defineProperty(CustomElement.prototype, key, {
+          enumerable: false,
+          configurable: true,
+          get() {
+            return this._props[key];
+          },
+          set(value) {
+            this._props[key] = value;
+            this.update();
+          },
+        });
         return [key, this._props[key]];
       }));
       return props;
@@ -172,13 +167,24 @@ export default function wrap(ReactComponent) {
       };
     }
 
+    constructor() {
+      super();
+      this.attachShadow({ mode: 'open' });
+    }
+
     render(props) {
       const fullProps = {
-        ...this.getPropTypes(),
         ...props,
+        ...this.getPropTypes(),
       };
-      this._wrapper = React.createElement(ReactComponent, fullProps);
-      render(this._wrapper, this);
+      // TODO: we may need to figure out how this plays with named slots
+      const childrenSlot = React.createElement('slot');
+      this._wrapper = React.createElement(
+        ReactComponent,
+        fullProps,
+        childrenSlot,
+      );
+      ReactDOM.render(this._wrapper, this.shadowRoot);
     }
   };
 }

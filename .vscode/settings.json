@@ -297,7 +297,7 @@
    * Enable format on save.
    * Defaults to true.
    */
-  // "editor.formatOnSave": true,
+  // "editor.formatOnSave": false,
   /**
    * Controls if the editor should allow to move selections via drag and drop.
    * Defaults to false.
