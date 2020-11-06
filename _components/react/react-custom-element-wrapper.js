@@ -39,6 +39,71 @@ function decapitalize(str) {
   }
 }
 
+
+const camelizeRE = /-(\w)/g;
+const camelize = str => (
+  str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : '')
+);
+
+const hyphenateRE = /\B([A-Z])/g;
+const hyphenate = str => (
+  str.replace(hyphenateRE, '-$1').toLowerCase()
+);
+
+/**
+ * Retrieve a value from an element's properties or attributes
+ * @param {HTMLElement} el
+ * @param {string} key
+ * @param {PropTypes.Requireable} propType
+ * @return {*}
+ */
+function getDOMValue(el, key, propType) {
+  const propName = camelize(key);
+
+  // If the element has that property, we're done
+  if (el.hasOwnProperty(propName)) {
+    return el[propName];
+  }
+  return getAttributeValue(el, key, propType);
+}
+
+/**
+ * Retrieve (& parse) a value from an element's attributes
+ * @param {HTMLElement} el
+ * @param {string} key
+ * @param {PropTypes.Requireable} propType
+ * @return {*}
+ */
+function getAttributeValue(el, key, propType) {
+  const attrName = hyphenate(key);
+
+  const hasAttribute = el.hasAttribute(attrName);
+  if (hasAttribute) {
+    switch (propType) {
+      // attribute is present
+      case PropTypes.bool.isRequired:
+      case PropTypes.bool:
+        return hasAttribute;
+
+      // value of attribute
+      case PropTypes.string.isRequired:
+      case PropTypes.string:
+        return el.getAttribute(attrName);
+
+      // parsed value of the attribute
+      case PropTypes.number.isRequired:
+      case PropTypes.number: {
+        const val = Number.parseFloat(el.getAttribute(attrName));
+        return Number.isNaN(val) ? val : undefined;
+      }
+
+      // Anything else probably should have been a property
+    }
+  }
+  return undefined;
+
+}
+
 class ReactCustomElement extends HTMLElement {
   constructor() {
     super();
@@ -130,10 +195,11 @@ export default function wrap(ReactComponent) {
       }))
     }
 
-    getPropertyPropTypes(keys) {
+    getPropertyPropTypes(keys, propTypes) {
       this._props = this._props ?? {};
+
       const props = Object.fromEntries(keys.map((key) => {
-        this._props[key] = this._props[key] ?? this[key];
+        this._props[key] = this._props[key] ?? getDOMValue(this, key, propTypes[key]);
         // TODO: this may need to have a way of reacting to inner changes
         Object.defineProperty(CustomElement.prototype, key, {
           enumerable: false,
@@ -159,7 +225,7 @@ export default function wrap(ReactComponent) {
         (propType) => (propType === PropTypes.func)
       );
       const functions = this.getEventPropTypes(functionPropNames);
-      const properties = this.getPropertyPropTypes(propertyPropNames);
+      const properties = this.getPropertyPropTypes(propertyPropNames, ReactComponent.propTypes);
 
       return {
         ...functions,
@@ -172,17 +238,24 @@ export default function wrap(ReactComponent) {
       this.attachShadow({ mode: 'open' });
     }
 
+    getChildren() {
+      // TODO: figure out how this plays with named slots
+      const childSlot = this.innerHTML
+        ? React.createElement('slot')
+        : null
+      ;
+      return childSlot;
+    }
+
     render(props) {
       const fullProps = {
         ...props,
         ...this.getPropTypes(),
       };
-      // TODO: we may need to figure out how this plays with named slots
-      const childrenSlot = React.createElement('slot');
       this._wrapper = React.createElement(
         ReactComponent,
         fullProps,
-        childrenSlot,
+        this.getChildren(),
       );
       ReactDOM.render(this._wrapper, this.shadowRoot);
     }

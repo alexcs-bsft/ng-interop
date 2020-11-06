@@ -1,4 +1,4 @@
-<h1>Hello {{$ctrl.name}}!</h1>
+<h1>Hello {{ $ctrl.name }}!</h1>
 <p>
   Start editing <b>home/home.html</b> :)
 
@@ -7,31 +7,64 @@
 </p>
 <span ng-if="show">Here I Am</span>
 <div class="list-container">
-  <ul class="ng1">
-    <li ng-repeat="user in $ctrl.users">
-      <user-item
-        user="user"
-        selected="user.id === $ctrl.selectedId"
-        ng-on-select_me="$ctrl.onSelect($event)"
-      ></user-item>
-    </li>
-  </ul>
-  <ul class="vue">
-    <li ng-repeat="user in $ctrl.users">
-      <v-user-item
-        ng-prop-user="user"
-        ng-prop-selected="user.id === $ctrl.selectedId"
-        ng-on-select_me="$ctrl.onSelect($event)"
-      ></v-user-item>
-    </li>
-  </ul>
-  <ul class="react">
-    <li ng-repeat="user in $ctrl.users">
-      <r-user-item
-        ng-prop-user="user"
-        ng-prop-selected="user.id === $ctrl.selectedId"
-        ng-on-select_me="$ctrl.onSelect($event)"
-      ></r-user-item>
-    </li>
-  </ul>
+  <div class="ng1">
+    <h3 style="border-left: 4px solid var(--c-ng1); padding-left: 8px;">
+      AngularJS (control)
+    </h3>
+    <user-item
+      ng-if="$ctrl.selectedUser"
+      user="$ctrl.selectedUser"
+      selected
+      unselectable
+    ></user-item>
+    <ul>
+      <li ng-repeat="user in $ctrl.users">
+        <user-item
+          user="user"
+          selected="user.id === $ctrl.selectedId"
+          ng-on-select_me="$ctrl.onSelect($event)"
+        ></user-item>
+      </li>
+    </ul>
+  </div>
+  <div class="vue">
+    <h3 style="border-left: 4px solid var(--c-vue); padding-left: 8px;">
+      Wrapped Vue Component
+    </h3>
+    <v-user-item
+      ng-if="$ctrl.selectedUser"
+      ng-prop-user="$ctrl.selectedUser"
+      selected
+      unselectable
+    ></v-user-item>
+    <ul>
+      <li ng-repeat="user in $ctrl.users">
+        <v-user-item
+          ng-prop-user="user"
+          ng-prop-selected="user.id === $ctrl.selectedId"
+          ng-on-select_me="$ctrl.onSelect($event)"
+        ></v-user-item>
+      </li>
+    </ul>
+  </div>
+  <div class="react">
+    <h3 style="border-left: 4px solid var(--c-react); padding-left: 8px;">
+      Wrapped React Component
+    </h3>
+    <r-user-item
+      ng-if="$ctrl.selectedUser"
+      ng-prop-user="$ctrl.selectedUser"
+      selected
+      unselectable
+    ></r-user-item>
+    <ul>
+      <li ng-repeat="user in $ctrl.users">
+        <r-user-item
+          ng-prop-user="user"
+          ng-prop-selected="user.id === $ctrl.selectedId"
+          ng-on-select_me="$ctrl.onSelect($event)"
+        ></r-user-item>
+      </li>
+    </ul>
+  </div>
 </div>

@@ -1,3 +1,10 @@
+:root {
+  --c-ng1: #B52E31;
+  --c-angular: #DD0031;
+  --c-react: #61dafb;
+  --c-vue: #42b983;
+}
+
 h1,
 p {
   font-family: Lato;
