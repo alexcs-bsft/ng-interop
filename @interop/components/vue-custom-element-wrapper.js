@@ -2,6 +2,9 @@
 // https://github.com/vuejs/vue-web-component-wrapper/blob/82abbca06a6c13be12c07af9982d9a31684bb0ad/dist/vue-wc-wrapper.js
 // Which forces shadow dom and isn't vue 3.0 compatible
 
+// TODO: figure out how to do this in vue 3.x, where Vue isn't a constructor
+import Vue from 'vue';
+
 
 const camelizeRE = /-(\w)/g;
 const camelize = str => {
@@ -100,7 +103,7 @@ function getAttributes (node) {
   return res
 }
 
-function wrap (Vue, Component) {
+function wrap (Component) {
   const isAsync = typeof Component === 'function' && !Component.cid;
   let isInitialized = false;
   let hyphenatedPropsList;
