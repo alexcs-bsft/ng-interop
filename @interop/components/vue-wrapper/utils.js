@@ -58,15 +58,15 @@ export function convertAttributeValue(value, name, { type } = {}) {
   }
 }
 
-export function toVNodes(children, createElement) {
+export function toVNodes(children, h) {
   const res = [];
   for (let i = 0, l = children.length; i < l; i++) {
-    res.push(toVNode(children[i], createElement));
+    res.push(toVNode(children[i], h));
   }
   return res;
 }
 
-function toVNode(node, createElement) {
+function toVNode(node, h) {
   if (node.nodeType === 3) {
     return node.data.trim() ? node.data : null;
   } else if (node.nodeType === 1) {
@@ -80,7 +80,7 @@ function toVNode(node, createElement) {
       data.slot = data.attrs.slot;
       delete data.attrs.slot;
     }
-    return createElement(node.tagName, data);
+    return h(node.tagName, data);
   } else {
     return null;
   }
