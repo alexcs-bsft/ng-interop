@@ -8,6 +8,7 @@ export default {
     </button>
     </div>
   `,
+  emits:['selectMe'],
   props: {
     unselectable: Boolean,
     selected: Boolean,
