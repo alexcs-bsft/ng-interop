@@ -12,7 +12,10 @@ export default {
   props: {
     unselectable: Boolean,
     selected: Boolean,
-    user: Object,
+    user: {
+      type: Object,
+      required: true,
+    },
     btnText: {
       type: String,
       default: 'select',

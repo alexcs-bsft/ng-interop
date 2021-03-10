@@ -71,6 +71,7 @@ export default function wrap(Component) {
   let hyphenatedPropsList;
   let camelizedPropsList;
   let camelizedPropsMap;
+  let requiredPropsList;
 
   function initialize() {
     if (isInitialized) {
@@ -87,6 +88,8 @@ export default function wrap(Component) {
     camelizedPropsMap = mapObj(originalPropsAsObject, {
       key: camelize,
     });
+    requiredPropsList = camelizedPropsList.filter((prop) => camelizedPropsMap[prop]?.required);
+
     // proxy props as Element properties
     // This is also necessary to make those properties assignable on the custom element instance
     camelizedPropsList.forEach(key => {
@@ -134,7 +137,7 @@ export default function wrap(Component) {
   class CustomElement extends HTMLElement {
     static _vueComponentName = options.name;  // For debugging
     _wrapper;  // The mini Vue app
-    _component;  // The mounted component
+    _appComponent;  // The mounted app component
 
     _props = {};  // The proxied properties
     _slotChildren = [];
@@ -147,11 +150,17 @@ export default function wrap(Component) {
 
       const self = this;
       this._wrapper = createApp({
-        props: camelizedPropsMap,
         render() {
           const { dataVApp, ...props } = { // Discard dataVApp
             ...self._props,
             ...eventProxies,
+          }
+
+          // Don't render if missing required props
+          const missingRequiredProp = requiredPropsList.find((propName) => !props[propName]);
+          if (missingRequiredProp) {
+            console.debug(`Cannot render <${CustomElement._vueComponentName}> without required "${missingRequiredProp}" prop`);
+            return;
           }
           return createElement(Component, props, () => self._slotChildren);
         },
@@ -214,7 +223,7 @@ export default function wrap(Component) {
       const convertedValue = convertAttributeValue(value, key, camelizedPropsMap[camelized]);
       this._props[camelized] = convertedValue;
 
-      this._component?.$forceUpdate();
+      this._appComponent?.$forceUpdate();
     }
 
     syncSlots() {
@@ -222,7 +231,7 @@ export default function wrap(Component) {
         this.childNodes,
         createElement,
       );
-      this._component?.$forceUpdate();
+      this._appComponent?.$forceUpdate();
     }
 
     syncInitialAttributes() {
@@ -233,7 +242,7 @@ export default function wrap(Component) {
     }
 
     connectedCallback() {
-      if (!this._component || !this._mounted) {
+      if (!this._appComponent || !this._mounted) {
         if (isInitialized) {
           // initialize attributes
           this.syncInitialAttributes();
@@ -242,15 +251,15 @@ export default function wrap(Component) {
         this.syncSlots();
 
         // Mount the component
-        this._component = this._wrapper.mount(this);
+        this._appComponent = this._wrapper.mount(this);
       } else {
         // Call mounted on re-insert
-        callHooks(this._component, 'mounted');
+        callHooks(this._appComponent, 'mounted');
       }
     }
 
     disconnectedCallback() {
-      callHooks(this._component, 'unmounted');
+      callHooks(this._appComponent, 'unmounted');
     }
   }
   // // For this to work, you have to change the class definition to `let CustomElement = class extends HTMLElement`
