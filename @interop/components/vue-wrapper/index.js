@@ -117,13 +117,11 @@ export default function wrap(Component) {
               value = parseFloat(newVal);
               break;
             case String:
-              value = newVal;
               this.setAttribute(key, newVal);
               break;
             default:
               value = newVal;
               this._props[key] = value;
-              this._component?.$forceUpdate();
           }
         },
         enumerable: true,
@@ -173,30 +171,29 @@ export default function wrap(Component) {
       });
 
       // Use MutationObserver to react to future attribute & slot content change
-      const observer = new MutationObserver(mutations => {
-        let hasChildrenChange = false;
-
-        for (let i = 0; i < mutations.length; i++) {
-          const m = mutations[i];
-
-          if (isInitialized && m.type === 'attributes' && m.target === this) {
-            if (m.attributeName) {
-              this.syncAttribute(m.attributeName);
-            }
-          } else {
-            hasChildrenChange = true;
-          }
-        }
-        if (hasChildrenChange) {
-          // this.syncSlots(); // Not sure this is still necessary
-        }
-      });
-      observer.observe(this, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-        attributes: true,
-      });
+      // const observer = new MutationObserver(mutations => {
+      //   let hasChildrenChange = false;
+      //
+      //   for (let i = 0; i < mutations.length; i++) {
+      //     const m = mutations[i];
+      //
+      //     if (isInitialized && m.type === 'attributes' && m.target === this) {
+      //       if (m.attributeName) {
+      //         this.syncAttribute(m.attributeName);
+      //       }
+      //     } else {
+      //       hasChildrenChange = true;
+      //     }
+      //   }
+      //   if (hasChildrenChange) {
+      //     // this.syncSlots();
+      //   }
+      // });
+      // observer.observe(this, {
+      //   childList: true,
+      //   subtree: true,
+      //   characterData: true,
+      // });
     }
 
     createEventProxies(eventNames) {
@@ -212,18 +209,17 @@ export default function wrap(Component) {
 
     syncAttribute(key) {
       const camelized = camelize(key);
-      let value = undefined;
+      let value;
 
-      // if (key in this) { // TODO: Is this supposed to replace the defineProperty?
       if (this.hasOwnProperty(key)) {
         value = this[key];
       } else if (this.hasAttribute(key)) {
         value = this.getAttribute(key);
       }
       const convertedValue = convertAttributeValue(value, key, camelizedPropsMap[camelized]);
-      this._props[camelized] = convertedValue;
-
-      this._appComponent?.$forceUpdate();
+      if (convertedValue !== this._props[camelized]) {
+        this._props[camelized] = convertedValue;
+      }
     }
 
     syncSlots() {
@@ -235,10 +231,27 @@ export default function wrap(Component) {
     }
 
     syncInitialAttributes() {
-      this._props = getInitialProps(camelizedPropsList);
+      const self = this;
+      this._props = new Proxy(getInitialProps(camelizedPropsList), {
+        set(...args) {
+          const ret = Reflect.set(...args);
+          self._appComponent?.$forceUpdate();
+          return ret;
+        }
+      });
       hyphenatedPropsList.forEach(key => {
         this.syncAttribute(key);
       });
+    }
+
+    // WebComponent API methods ----------------------------------------------
+
+    static get observedAttributes() {
+      return hyphenatedPropsList;
+    }
+
+    attributeChangedCallback(name) { // `oldValue`, `newValue` params are also available
+      this.syncAttribute(name);
     }
 
     connectedCallback() {
