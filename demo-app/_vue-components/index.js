@@ -1,7 +1,7 @@
 import defineVueCustomElement from '../../lib/components';
 
-import UserItem from './user-item';
-import UserList from './user-list';
+import UserItem from './user-item.vue';
+import UserList from './user-list.vue';
 
 
 [

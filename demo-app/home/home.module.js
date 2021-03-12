@@ -1,4 +1,5 @@
 import angular from 'angular';
+import '@uirouter/angularjs';
 
 import HomeCtrl from './home.controller';
 import addHomeRoutes from './home.routing';
@@ -7,7 +8,7 @@ import UserService from '../services/user.service';
 
 
 // Create the module where our functionality can attach to
-const homeModule = angular.module('home', []);
+const homeModule = angular.module('home', ['ui.router']);
 
 homeModule.controller('HomeCtrl', HomeCtrl);
 homeModule.component('userItem', userItem);

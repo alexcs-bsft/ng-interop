@@ -1,10 +1,4 @@
-import AngularJsInjections from '../../lib/dependency-injection';
-import UserItem from './user-item';
-
-
-export default {
-  name: 'user-list',
-  template: `
+<template>
   <div>
     <h3 style="border-left: 4px solid var(--c-vue); padding-left: 8px;">
       {{ heading }} <button @click="fetchUsers" :disabled="loading">Fetch Users</button>
@@ -25,7 +19,15 @@ export default {
       </li>
     </ul>
   </div>
-  `,
+</template>
+
+<script>
+import AngularJsInjections from '../../lib/dependency-injection';
+import UserItem from './user-item.vue';
+
+
+export default {
+  name: 'user-list',
   props: {
     heading: String,
   },
@@ -66,3 +68,4 @@ export default {
     },
   },
 };
+</script>

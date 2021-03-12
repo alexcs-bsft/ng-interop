@@ -1,14 +1,21 @@
 {
   "name": "@blueshift/ng-interop",
   "version": "0.0.1",
-  "scripts": {},
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
   "private": true,
   "dependencies": {
     "@vue/shared": "^3.0.7"
   },
   "devDependencies": {
     "@uirouter/angularjs": "1.0.28",
+    "@vitejs/plugin-vue": "^1.1.5",
+    "@vue/compiler-sfc": "^3.0.7",
     "angular": "1.8.2",
+    "vite": "^2.0.5",
     "vue": "^3.0.7"
   },
   "peerDependencies": {
