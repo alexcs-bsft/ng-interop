@@ -1,5 +1,6 @@
-import AngularJsInjections from '../../@interop/dependency-injection';
+import AngularJsInjections from '../../lib/dependency-injection';
 import UserItem from './user-item';
+
 
 export default {
   name: 'user-list',

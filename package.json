@@ -1,5 +1,5 @@
 {
-  "name": "angularjs-interop",
+  "name": "@blueshift/ng-interop",
   "version": "0.0.1",
   "scripts": {},
   "private": true,
@@ -9,7 +9,6 @@
   "devDependencies": {
     "@uirouter/angularjs": "1.0.28",
     "angular": "1.8.2",
-    "lodash": "^4.17.20",
     "vue": "^3.0.7"
   },
   "peerDependencies": {

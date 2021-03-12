@@ -1,8 +1,11 @@
 class HomeCtrl {
-  constructor($scope, UserService) {
-    "ngInject";
+  static $inject = [
+    '$scope',
+    'UserService',
+  ];
 
-    this.name = "AngularJS";
+  constructor($scope, UserService) {
+    this.name = 'AngularJS';
     this.$Uservice = UserService;
     this.users = [];
     this.selectedId = null;
@@ -14,18 +17,18 @@ class HomeCtrl {
   }
 
   onSelect($event) {
-    console.log("onSelect", $event);
+    console.log('onSelect', $event);
     const payload = Array.isArray($event?.detail)
       ? $event?.detail?.[0]
       : $event?.detail;
     this.selectedId = payload?.id ?? null;
-    this.users.forEach(u => {
+    this.users.forEach((u) => {
       u.selected = (u.id === this.selectedId);
-    })
+    });
   }
 
   async getUsers() {
-    this.users = await this.$Uservice.getUsers().then(res => res.data.slice(0,2));
+    this.users = await this.$Uservice.getUsers().then((res) => res.data.slice(0, 2));
     this.$scope.$applyAsync();
   }
 
