@@ -1,10 +1,27 @@
 {
   "name": "@blueshift/ng-interop",
   "version": "0.0.1",
+  "description": "interoperability between Vue and angular.js",
+  "author": "Alexander Simonides",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexcs-bsft/ng-interop.git"
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "module": "./dist/ng-interop.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ng-interop.es.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "build:pack": "vite build && npm pack"
   },
   "private": true,
   "dependencies": {
@@ -14,13 +31,15 @@
     "@uirouter/angularjs": "1.0.28",
     "@vitejs/plugin-vue": "^1.1.5",
     "@vue/compiler-sfc": "^3.0.7",
-    "angular": "1.8.2",
+    "angular": "^1.8.0",
     "vite": "^2.0.5",
     "vue": "^3.0.7"
   },
   "peerDependencies": {
-    "@uirouter/angularjs": "1.0.28",
-    "angular": "1.8.2",
+    "angular": "^1.8.0",
     "vue": "^3.0.7"
+  },
+  "engines": {
+    "node": "^14.7.0"
   }
 }

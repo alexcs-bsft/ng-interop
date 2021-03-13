@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import AngularJsInjections from '../../lib/dependency-injection';
+import { AngularJsInjections } from '@blueshift/ng-interop';
 import UserItem from './user-item.vue';
 
 
