@@ -2,7 +2,7 @@ name: Create a tag any time package.json's version changes
 on:
   push:
     branches:
-      - prod
+      - develop
     paths:
       - package.json
 jobs:
