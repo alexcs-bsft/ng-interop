@@ -6,7 +6,7 @@ class HomeCtrl {
 
   constructor($scope, UserService) {
     this.name = 'AngularJS';
-    this.$Uservice = UserService;
+    this.UserService = UserService;
     this.users = [];
     this.selectedId = null;
     this.$scope = $scope;
@@ -28,7 +28,7 @@ class HomeCtrl {
   }
 
   async getUsers() {
-    this.users = await this.$Uservice.getUsers().then((res) => res.data.slice(0, 2));
+    this.users = await this.UserService.getUsers().then((res) => res.data.slice(0));
     this.$scope.$applyAsync();
   }
 

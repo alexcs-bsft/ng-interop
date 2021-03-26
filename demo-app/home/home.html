@@ -5,12 +5,11 @@
   <button class="button" ng-click="$ctrl.getUsers()"> Find Users!</button>
   <button class="button" ng-click="$ctrl.selectedId = null;" ng-disabled="!$ctrl.selectedId">Unselect</button>
 </p>
-<span ng-if="show">Here I Am</span>
 <div class="list-container">
-  <div class="ng1">
-    <h3 style="border-left: 4px solid var(--c-ng1); padding-left: 8px;">
+  <section class="ng1">
+    <h2 style="border-left: 4px solid var(--c-ng1); padding-left: 8px;">
       AngularJS (control)
-    </h3>
+    </h2>
     <user-item
       ng-if="$ctrl.selectedUser"
       user="$ctrl.selectedUser"
@@ -26,11 +25,11 @@
         ></user-item>
       </li>
     </ul>
-  </div>
-  <div class="vue">
-    <h3 style="border-left: 4px solid var(--c-vue); padding-left: 8px;">
+  </section>
+  <section class="vue">
+    <h2 style="border-left: 4px solid var(--c-vue); padding-left: 8px;">
       Wrapped Vue Component
-    </h3>
+    </h2>
     <!-- <p ng-if="$ctrl.selectedUser">
       {{$ctrl.selectedUser.name}}
     </p> -->
@@ -46,9 +45,9 @@
           ng-prop-user="user"
           ng-prop-selected="user.id === $ctrl.selectedId"
           ng-on-select_me="$ctrl.onSelect($event)"
-        >{{$ctrl.selectedId === user.id ? 'selected' : 'SELECT'}}</v-user-item>
+        ></v-user-item>
       </li>
     </ul>
-  </div>
-  <v-user-list heading="Vue Component using DI" style="grid-area: 2 / 1;"></v-user-list>
+  </section>
+  <v-user-list heading="Vue Component using DI" style="grid-area: 2 / 1;" ng-prop-users="$ctrl.users"></v-user-list>
 </div>

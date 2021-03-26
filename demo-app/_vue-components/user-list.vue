@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h3 style="border-left: 4px solid var(--c-vue); padding-left: 8px;">
+  <section>
+    <h2 style="border-left: 4px solid var(--c-vue); padding-left: 8px;">
       {{ heading }} <button @click="fetchUsers" :disabled="loading">Fetch Users</button>
-    </h3>
+    </h2>
     <user-item
       v-if="selectedUser"
       :user="selectedUser"
@@ -10,7 +10,7 @@
       unselectable
     ></user-item>
     <ul>
-      <li v-for="user in users">
+      <li v-for="user in _users">
         <user-item
           :user="user"
           :selected="user.id === selectedId"
@@ -18,7 +18,7 @@
         ></user-item>
       </li>
     </ul>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -30,6 +30,7 @@ export default {
   name: 'user-list',
   props: {
     heading: String,
+    users: Array,
   },
   components: {
     UserItem,
@@ -38,7 +39,7 @@ export default {
     const UserService = AngularJsInjections.get('UserService');
     return {
       UserService,
-      users: [],
+      _users: [],
       selectedId: null,
       loading: false,
     };
@@ -46,11 +47,14 @@ export default {
   computed: {
     selectedUser() {
       console.debug('re-calculating vue selectedUser');
-      return this.users.find(u => u.id === this.selectedId) ?? null;
+      return this._users.find(u => u.id === this.selectedId) ?? null;
     },
   },
   watch: {
-    users() {
+    users(newV) {
+      this._users = newV;
+    },
+    _users() {
       this.selectedId = null;
     },
   },
@@ -60,7 +64,7 @@ export default {
       const response = await this.UserService.getUsers();
       this.loading = false;
 
-      this.users = response.data || [];
+      this._users = response.data || [];
       // this.selectedId = null;
     },
     onSelect($event) {
