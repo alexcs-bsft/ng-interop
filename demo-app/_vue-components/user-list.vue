@@ -1,8 +1,13 @@
 <template>
   <section>
     <h2 style="border-left: 4px solid var(--c-vue); padding-left: 8px;">
-      {{ heading }} <button @click="fetchUsers" :disabled="loading">Fetch Users</button>
+      {{ headingText }}
+      <button @click="fetchUsers" :disabled="loading">Fetch Users</button>
     </h2>
+    <pre>
+      aNumber: {{ aNumber+1 }}
+      aBoolean: {{ aBoolean }}
+    </pre>
     <user-item
       v-if="selectedUser"
       :user="selectedUser"
@@ -29,8 +34,10 @@ import UserItem from './user-item.vue';
 export default {
   name: 'user-list',
   props: {
-    heading: String,
+    headingText: String,
     users: Array,
+    aNumber: Number,
+    aBoolean: Boolean,
   },
   components: {
     UserItem,
