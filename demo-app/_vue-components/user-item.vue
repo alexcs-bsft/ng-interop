@@ -1,8 +1,12 @@
 <template>
-  <div v-if="user" class="user" :class="{ selected: selected }">
+  <div
+    v-if="user"
+    class="user"
+    :class="{ selected: selected }"
+  >
     <span>Id: {{ user.id }}</span> - <span>{{ user.name }}</span>
     <button v-if="!unselectable" @click="$emit('selectMe', user)" :disabled="selected">
-      <slot>{{ btnText }}</slot>
+      {{ btnText }}
     </button>
   </div>
 </template>
@@ -27,3 +31,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.user {
+  color: deeppink;
+}
+</style>
