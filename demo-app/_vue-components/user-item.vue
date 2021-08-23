@@ -33,7 +33,4 @@ export default {
 </script>
 
 <style scoped>
-.user {
-  color: deeppink;
-}
 </style>
