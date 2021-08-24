@@ -7,10 +7,22 @@ import package_json from './package.json';
 
 const packageName = package_json.name;
 
+const allowedCeTags = [
+  'ui-view',
+];
+
 // https://vitejs.dev/config/
 export default ({ command, mode }) => defineConfig({
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement(tag) {
+            return allowedCeTags.includes(tag);
+          },
+        },
+      },
+    }),
   ],
   server: {
     port: 1234,

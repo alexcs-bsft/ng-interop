@@ -13,12 +13,12 @@ export default {
     user: '<',
   },
   transclude: true,
-  controller($element, $attrs) {
+  controller: ['$element', '$attrs', function ($element, $attrs) {
     this.emit = (eventName, payload) => {
       const event = new CustomEvent(eventName, { detail: payload });
       $element[0].dispatchEvent(event);
     };
     // Attribute style boolean binding
     this.unselectable = this._unselectable || $attrs.hasOwnProperty('unselectable');
-  },
+  }],
 };
