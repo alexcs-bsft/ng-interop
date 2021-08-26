@@ -4,11 +4,26 @@ class HomeCtrl {
     'UserService',
   ];
 
+  name = 'AngularJS inside ng-wrapper vue component';
+  users = [];
+  selectedId = null;
+  testProps = {
+    title: '1string',
+    likes: 4,
+    is_published: true,
+    comment_ids: ['a1', '2b', 'c3'],
+    author: {
+      name: 'Alex',
+      published: true,
+      post_count: 10,
+    },
+    callback: function testCb() {},
+    promise: Promise.resolve(10),
+  };
+
+
   constructor($scope, UserService) {
-    this.name = 'AngularJS';
     this.UserService = UserService;
-    this.users = [];
-    this.selectedId = null;
     this.$scope = $scope;
   }
 

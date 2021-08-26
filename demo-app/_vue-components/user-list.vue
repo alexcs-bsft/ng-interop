@@ -1,28 +1,34 @@
 <template>
-  <section>
-    <h2 style="border-left: 4px solid var(--c-vue); padding-left: 8px;">
+  <section style="display: grid; grid-template-columns: 1fr 1fr; align-content: center;">
+    <h2 class="vue-heading">
       {{ headingText }}
-      <button @click="fetchUsers" :disabled="loading">Fetch Users</button>
     </h2>
+    <button
+      style="place-self: baseline left;"
+      @click="fetchUsers"
+      :disabled="loading"
+    >Fetch Users</button>
+    <div>
+      <user-item
+        v-if="selectedUser"
+        :user="selectedUser"
+        selected
+        unselectable
+      ></user-item>
+      <ul>
+        <li v-for="user in _users">
+          <user-item
+            :user="user"
+            :selected="user.id === selectedId"
+            @selectMe="onSelect"
+          ></user-item>
+        </li>
+      </ul>
+    </div>
     <pre>
       aNumber: {{ aNumber+1 }}
       aBoolean: {{ aBoolean }}
     </pre>
-    <user-item
-      v-if="selectedUser"
-      :user="selectedUser"
-      selected
-      unselectable
-    ></user-item>
-    <ul>
-      <li v-for="user in _users">
-        <user-item
-          :user="user"
-          :selected="user.id === selectedId"
-          @selectMe="onSelect"
-        ></user-item>
-      </li>
-    </ul>
   </section>
 </template>
 

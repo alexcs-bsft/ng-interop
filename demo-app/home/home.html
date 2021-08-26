@@ -7,7 +7,7 @@
 </p>
 <div class="list-container">
   <section class="ng1">
-    <h2 style="border-left: 4px solid var(--c-ng1); padding-left: 8px;">
+    <h2 class="vue-heading">
       AngularJS (control)
     </h2>
     <user-item
@@ -50,10 +50,19 @@
     </ul>
   </section>
   <v-user-list
-    style="grid-area: 2 / 1;"
+    style="grid-area: 2 / span 2;"
     ng-prop-heading_text="'Vue Component using DI'"
     ng-prop-a_boolean="true"
     ng-prop-a_number="1"
     ng-prop-users="$ctrl.users"
   ></v-user-list>
+  <v-prop-tester
+    ng-prop-title="$ctrl.testProps.title"
+    ng-prop-likes="$ctrl.testProps.likes"
+    ng-prop-is_published="$ctrl.testProps.is_published"
+    ng-prop-comment_ids="$ctrl.testProps.comment_ids"
+    ng-prop-author="$ctrl.testProps.author"
+    ng-prop-callback="$ctrl.testProps.callback"
+    ng-prop-promise="$ctrl.testProps.promise"
+  ></v-prop-tester>
 </div>
