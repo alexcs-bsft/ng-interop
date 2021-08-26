@@ -1,6 +1,6 @@
 {
   "name": "@blueshift/ng-interop",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "interoperability between Vue and angular.js",
   "author": "Alexander Simonides",
   "repository": {
@@ -25,20 +25,20 @@
   },
   "private": true,
   "dependencies": {
-    "@vue/shared": "^3.2.2"
+    "@vue/shared": "^3.2.6"
   },
   "devDependencies": {
     "@uirouter/angularjs": "1.0.28",
-    "@vitejs/plugin-vue": "^1.4.0",
-    "@vue/compiler-sfc": "^3.2.2",
+    "@vitejs/plugin-vue": "^1.6.0",
+    "@vue/compiler-sfc": "^3.2.6",
     "angular": "^1.8.0",
     "lodash": "^4.17.21",
     "vite": "^2.4.4",
-    "vue": "^3.2.2"
+    "vue": "^3.2.6"
   },
   "peerDependencies": {
     "angular": "^1.8.0",
-    "vue": "^3.2.2"
+    "vue": "^3.2.6"
   },
   "engines": {
     "node": "^14.7.0"
