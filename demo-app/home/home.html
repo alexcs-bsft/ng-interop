@@ -65,4 +65,7 @@
     ng-prop-callback="$ctrl.testProps.callback"
     ng-prop-promise="$ctrl.testProps.promise"
   ></v-prop-tester>
+  <button
+    ng-click="$ctrl.testProps.is_published = !$ctrl.testProps.is_published"
+  >toggle is_published</button>
 </div>
