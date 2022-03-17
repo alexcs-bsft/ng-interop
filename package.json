@@ -5,7 +5,7 @@
   "author": "Alexander Simonides",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexcs-bsft/ng-interop.git"
+    "url": "git+https://github.com/blueshift-labs/ng-interop.git"
   },
   "files": [
     "lib",
