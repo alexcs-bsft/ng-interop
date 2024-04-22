@@ -1,6 +1,6 @@
 {
   "name": "@blueshift/ng-interop",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "interoperability between Vue and angular.js",
   "author": "Alexander Simonides",
   "repository": {
@@ -41,6 +41,6 @@
     "vue": "^3.0.7"
   },
   "engines": {
-    "node": "^20.12.2"
+    "node": "^19.9.0"
   }
 }
